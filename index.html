@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Happy Valentine's Day</title>
+<!-- Tailwind CSS CDN with forms and container-queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts for Elegant Typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;family=Inter:wght@300;400&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-animations">
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    
+    .heart-particle {
+      position: fixed;
+      top: -10%;
+      user-select: none;
+      pointer-events: none;
+      z-index: 0;
+      animation: fall linear infinite;
+    }
+
+    .cursive {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .polaroid-shadow {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+<style data-purpose="background-gradient">
+    body {
+      background: linear-gradient(180deg, #ffc0cb 0%, #dc2626 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+<!-- BEGIN: Falling Hearts Container -->
+<div aria-hidden="true" class="fixed inset-0 overflow-hidden pointer-events-none" id="hearts-container">
+<!-- Hearts will be injected via JS -->
+</div>
+<!-- END: Falling Hearts Container -->
+<!-- BEGIN: Main Content Container -->
+<main class="relative z-10 flex flex-col items-center justify-center w-full max-w-lg space-y-12">
+<!-- BEGIN: Polaroid Interaction Section -->
+<section class="flex flex-col items-center" data-purpose="interactive-photo-display" id="polaroid-section">
+<h1 class="text-white text-5xl mb-8 cursive text-center drop-shadow-md">Our Moments</h1>
+<!-- Polaroid Frame -->
+<div class="bg-white p-4 pb-12 polaroid-shadow transition-all duration-500 cursor-pointer transform hover:rotate-2" data-purpose="click-target" id="polaroid-frame">
+<div class="overflow-hidden bg-gray-100 w-64 h-64 sm:w-80 sm:h-80 relative">
+<img alt="Valentine Memory" class="w-full h-full object-cover transition-opacity duration-300" id="valentine-image" src="mooqiw.jpg"/>
+</div>
+<div class="mt-4 text-center cursive text-3xl text-gray-700">Click to grow our love</div>
+</div>
+<p class="mt-4 text-white/80 text-sm italic">Click the photo to reveal a surprise!</p>
+</section>
+<!-- END: Polaroid Interaction Section -->
+<!-- BEGIN: Love Letter Section -->
+<section class="hidden w-full max-w-md bg-white p-8 rounded-lg shadow-2xl border-8 border-double border-red-500 relative" data-purpose="finale-message" id="love-letter">
+<!-- Decorative Heart Corners -->
+<div class="absolute -top-6 -left-6 text-4xl">❤️</div>
+<div class="absolute -top-6 -right-6 text-4xl">❤️</div>
+<div class="absolute -bottom-6 -left-6 text-4xl">❤️</div>
+<div class="absolute -bottom-6 -right-6 text-4xl">❤️</div>
+<div class="text-center space-y-6">
+<h2 class="cursive text-5xl text-red-600">Moo Qiw,</h2>
+<p class="cursive text-4xl leading-relaxed text-gray-800">
+          Lux tonnam t suuuuuu 
+        </p>
+        <h2 class="cursive text-5xl text-red-600">By Pitchayes</h2>
+<button class="mt-4 px-6 py-2 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 transition-colors duration-200 uppercase tracking-widest text-xs" id="reset-btn">
+          Reset
+        </button>
+</div>
+</section>
+<!-- END: Love Letter Section -->
+</main>
+<!-- END: Main Content Container -->
+<script data-purpose="hearts-animation">
+    /**
+     * Creates and animates floating background hearts
+     */
+    function createHearts() {
+      const container = document.getElementById('hearts-container');
+      const heartCount = 20;
+      const symbols = ['❤️', '💖', '💗', '💕', '✨'];
+
+      for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-particle';
+        heart.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+        
+        // Random positioning and timing
+        const left = Math.random() * 100;
+        const duration = 5 + Math.random() * 10;
+        const delay = Math.random() * 5;
+        const size = 10 + Math.random() * 20;
+
+        heart.style.left = `${left}%`;
+        heart.style.animationDuration = `${duration}s`;
+        heart.style.animationDelay = `-${delay}s`;
+        heart.style.fontSize = `${size}px`;
+        
+        container.appendChild(heart);
+      }
+    }
+    createHearts();
+  </script>
+<script data-purpose="interaction-logic">
+    /**
+     * Manages clicking logic, scaling, and final reveal
+     */
+    const images = [
+      'old.jpg',
+      'cute-cats.gif',
+      'angry.jpg'
+    ];
+    
+    const scales = [1.2, 1.5, 1.8];
+    let clickCount = 0;
+
+    const frame = document.getElementById('polaroid-frame');
+    const imgElement = document.getElementById('valentine-image');
+    const letter = document.getElementById('love-letter');
+    const polaroidSection = document.getElementById('polaroid-section');
+    const resetBtn = document.getElementById('reset-btn');
+
+    frame.addEventListener('click', () => {
+      if (clickCount < 3) {
+        // Change Image
+        imgElement.style.opacity = '0';
+        setTimeout(() => {
+          imgElement.src = images[clickCount];
+          imgElement.style.opacity = '1';
+          
+          // Apply Scale
+          frame.style.transform = `scale(${scales[clickCount]}) rotate(${Math.random() * 4 - 2}deg)`;
+          
+          clickCount++;
+
+          // Check for finale
+          if (clickCount === 3) {
+            setTimeout(() => {
+              polaroidSection.classList.add('transition-opacity', 'duration-1000', 'opacity-0');
+              setTimeout(() => {
+                polaroidSection.style.display = 'none';
+                letter.classList.remove('hidden');
+                letter.classList.add('fade-in');
+              }, 1000);
+            }, 1000);
+          }
+        }, 300);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      // Reset State
+      clickCount = 0;
+      frame.style.transform = 'scale(1) rotate(0deg)';
+      imgElement.src = 'mooqiw.jpg';
+      
+      letter.classList.add('hidden');
+      letter.classList.remove('fade-in');
+      
+      polaroidSection.style.display = 'flex';
+      setTimeout(() => {
+        polaroidSection.classList.remove('opacity-0');
+      }, 50);
+    });
+  </script>
+</body></html>
